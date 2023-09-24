@@ -192,7 +192,8 @@ class Run implements \Weline\Framework\Console\CommandInterface
         file_put_contents($php_unit_config_path, $php_unit_xml);
         $text_suite_name = $args[1] ?? 'unit';
         $this->printing->note(__('正在测试套件: %1', $text_suite_name));
-        $command = $this->system->exec("phpunit --configuration $php_unit_config_path", false);
+        $ds = DS;
+        $command = $this->system->exec(PHP_BINARY.' '.VENDOR_PATH."{$ds}phpunit{$ds}phpunit{$ds}phpunit --configuration $php_unit_config_path", false);
         $this->printing->success($command['command']);
         $this->printing->success(implode("\r\n", $command['output']));
         if ($command['return_vars']) {
