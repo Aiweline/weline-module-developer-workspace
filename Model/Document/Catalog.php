@@ -101,34 +101,6 @@ class Catalog extends \Weline\Framework\Database\Model
         return $this->getData(self::fields_DESCRIPTION) ?? '';
     }
 
-    public function getTree(string $main_field = '', string $parent_id_field = 'parent_id', string|int $parent_id_value = '', string $order_field = 'position', string $order_sort =
-    'ASC'): array
-    {
-        $catalogs = $this->where('pid=0')->select()->fetchOrigin();
-        /**@var Catalog $catalog */
-        foreach ($catalogs as &$catalog) {
-            $this->getSubTree($catalog);
-        }
-        return $catalogs;
-    }
-
-    public function getSubTree(&$catalog)
-    {
-        $catalog['href'] = $this->getUrl(['id' => $catalog['id']]);
-        $catalog['text'] = $catalog['name'];
-        $catalogs        = $this->where('pid', $catalog['id'])->select()->fetchOrigin();
-        if ($catalogs) {
-            /**@var Catalog $sub_catalog */
-            foreach ($catalogs as &$sub_catalog) {
-                $this->getSubTree($sub_catalog);
-            }
-            $catalog['nodes'] = $catalogs;
-        } else {
-            $catalog['nodes'] = [];
-        }
-        return $catalog;
-    }
-
     /**
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
