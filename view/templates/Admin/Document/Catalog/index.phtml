@@ -1,346 +1,1185 @@
 <?php
-/**@var \Weline\Framework\View\Template $this */
-/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
-$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+/**
+ * 开发文档分类管理（内容模板）
+ * 
+ * 由布局系统自动包裹 HTML 框架
+ *
+ * @var \Weline\Framework\View\Template $this
+ */
 ?>
-<!DOCTYPE html>
-<!--
- *@Author       秋枫雁飞
- *@Email        aiweline@qq.com
- *@Forum        https://bbs.aiweline.com
- *@DESC         后台共用头部
--->
-<html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?>>
-<head>
-    <title><lang>Weline Admin 管理面板</lang></title>
-    <!--模板Weline_Admin::common/head.phtml-->
-    <w:template>Weline_Admin::common/head.phtml</w:template>
-    <!-- jvectormap -->
-    <w:css>Weline_Admin::assets/libs/jqvmap/jqvmap.min.css</w:css>
-    <!--树形插件-->
-    <css>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
-    <js>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
-    <!--switch开关-->
-    <css>Weline_Admin::/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css</css>
-</head>
+<style>
+#catalog-tree-container {
+    min-height: 500px;
+    border-radius: 6px;
+    padding: 10px;
+    overflow-x: auto;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
+    user-select: none;
+}
+#catalog-tree-container.dragging {
+    cursor: grabbing !important;
+}
+#catalog-tree {
+    font-size: 13px;
+    min-width: 100%;
+    width: max-content;
+}
+.jstree-node {
+    min-height: 28px;
+    line-height: 28px;
+    margin: 1px 0;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    min-width: 100%;
+    width: max-content;
+}
+.jstree-node:nth-child(even) {
+    background-color: transparent;
+}
+.jstree-node:nth-child(odd) {
+    background-color: transparent;
+}
+.jstree-anchor {
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    color: var(--backend-color-text-primary, #495057);
+    min-height: 28px;
+    white-space: nowrap;
+    vertical-align: top;
+    max-width: none;
+    overflow: visible;
+}
+.jstree-anchor > * {
+    vertical-align: middle;
+}
+.jstree-container-ul {
+    min-width: 100%;
+    width: max-content;
+}
+#catalog-tree-container .jstree {
+    min-width: 100%;
+    width: max-content;
+}
+.jstree-anchor:hover {
+    background-color: rgba(var(--backend-color-primary-rgb, 11, 177, 151), 0.1) !important;
+    color: var(--backend-color-primary, #0bb197) !important;
+    box-shadow: 0 2px 4px rgba(var(--backend-color-primary-rgb, 11, 177, 151), 0.15);
+    transform: translateX(2px);
+}
+.jstree-clicked {
+    background-color: rgba(var(--backend-color-primary-rgb, 11, 177, 151), 0.15) !important;
+    color: var(--backend-color-primary, #0a9d85) !important;
+    box-shadow: 0 2px 6px rgba(var(--backend-color-primary-rgb, 11, 177, 151), 0.25);
+}
+.jstree-anchor i.mdi {
+    font-size: 16px;
+    line-height: 1;
+    margin-right: 4px;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.jstree-contextmenu {
+    z-index: 10000;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.jstree-contextmenu .jstree-contextmenu-item {
+    padding: 10px 20px;
+    transition: all 0.2s ease;
+}
+.jstree-contextmenu .jstree-contextmenu-item:hover {
+    background-color: rgba(var(--backend-color-primary-rgb, 11, 177, 151), 0.1);
+    color: var(--backend-color-primary, #0bb197);
+}
+.jstree-contextmenu .jstree-contextmenu-item.jstree-contextmenu-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: var(--backend-color-text-secondary, #6c757d) !important;
+    background-color: var(--backend-color-bg-tertiary, #e9ecef) !important;
+    position: relative;
+    pointer-events: auto;
+}
+.jstree-contextmenu .jstree-contextmenu-item.jstree-contextmenu-disabled:hover {
+    background-color: var(--backend-color-bg-tertiary, #e9ecef) !important;
+    color: var(--backend-color-text-secondary, #6c757d) !important;
+    cursor: not-allowed;
+}
+.jstree-contextmenu .jstree-contextmenu-item.jstree-contextmenu-disabled a {
+    pointer-events: none;
+}
+.system-badge {
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--backend-color-primary, #0bb197) 0%, #0a9d85 100%) !important;
+    box-shadow: 0 1px 3px rgba(var(--backend-color-primary-rgb, 11, 177, 151), 0.3);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+.system-badge i {
+    font-size: 0.85em;
+    margin-right: 2px !important;
+}
+.jstree-node[data-system="true"] .jstree-anchor {
+    border-left: 2px solid var(--backend-color-primary, #0bb197);
+    padding-left: 6px;
+}
+.jstree-node[data-system="true"] {
+    background-color: transparent !important;
+}
+small.text-muted {
+    font-size: 0.8em;
+    font-weight: normal;
+}
+</style>
 
-<!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
-<body <?= $themeConfig->getLayouts() ?? ''; ?>>
-<!--加载中组件 开始-->
-@template(Weline_Admin::common/page/loading.phtml)
-<!-- 开始 页面 -->
-<div id="layout-wrapper">
+<!-- jstree 树形插件 -->
+<link rel="stylesheet" href="@static(Weline_Acl::libs/vakata-jstree-3.3.14-0/dist/themes/default/style.min.css)" />
+<script src="@static(Weline_Acl::libs/vakata-jstree-3.3.14-0/dist/jstree.min.js)"></script>
 
-    <!--页头工具条 开始-->
-    <w:block class='Weline\Admin\Block\Backend\Page\Topbar'/>
-    <!--页头工具条 结束-->
-    <!-- ========== Topnav Start ========== -->
-    <!--页头菜单栏 开始-->
-    <w:block class='Weline\Admin\Block\Backend\Page\Topnav' />
-    <!--页头菜单栏 结束-->
+<!-- 国际化字符串 -->
+<script>
+(function() {
+    'use strict';
+    
+    window.i18n = {
+        'pageTitle': '<?=__('开发文档分类管理')?>',
+        'pageDescription': '<?=__('左侧点击分类可在右侧编辑，拖拽节点可调整分类顺序和层级，空白处按住鼠标可以左右拖动')?>',
+        'addTopLevelCategory': '<?=__('添加顶级分类')?>',
+        'back': '<?=__('返回')?>',
+        'close': '<?=__('关闭')?>',
+        'loading': '<?=__('加载中...')?>',
+        'loadingCatalogTree': '<?=__('正在加载分类树...')?>',
+        'noCategories': '<?=__('暂无分类，点击"添加顶级分类"开始创建')?>',
+        'addCategory': '<?=__('添加分类')?>',
+        'addSubCategory': '<?=__('添加子分类')?>',
+        'editCategory': '<?=__('编辑分类')?>',
+        'categoryName': '<?=__('分类名称')?>',
+        'categoryDescription': '<?=__('分类描述')?>',
+        'enableCategory': '<?=__('启用分类')?>',
+        'pleaseEnterCategoryName': '<?=__('请输入分类名称')?>',
+        'pleaseEnterCategoryDescription': '<?=__('请输入分类描述')?>',
+        'cancel': '<?=__('取消')?>',
+        'save': '<?=__('保存')?>',
+        'delete': '<?=__('删除')?>',
+        'edit': '<?=__('编辑')?>',
+        'editCategoryMenu': '<?=__('编辑分类')?>',
+        'deleteCategoryMenu': '<?=__('删除分类')?>',
+        'addSubCategoryMenu': '<?=__('添加子分类')?>',
+        'systemCategoryNotEditable': '<?=__('系统分类不允许编辑')?>',
+        'systemCategoryNotDeletable': '<?=__('系统分类不允许删除')?>',
+        'hasSystemChildNotDeletable': '<?=__('下层有系统分类，不允许删除')?>',
+        'systemCategory': '<?=__('系统分类')?>',
+        'saveSuccess': '<?=__('保存成功！')?>',
+        'saveFailed': '<?=__('保存失败')?>',
+        'deleteSuccess': '<?=__('删除成功！')?>',
+        'deleteFailed': '<?=__('删除失败')?>',
+        'categoryNameRequired': '<?=__('分类名称不能为空')?>',
+        'catalogTreeNotInitialized': '<?=__('分类树未初始化，请刷新页面重试')?>',
+        'jstreeNotAvailable': '<?=__('jstree实例不可用，请刷新页面重试')?>',
+        'nodeNotExists': '<?=__('节点不存在，ID:')?>',
+        'nodeDataFormatError': '<?=__('节点数据格式错误，请刷新页面')?>',
+        'nodeDataFormatErrorShort': '<?=__('节点数据格式错误')?>',
+        'editNodeFailed': '<?=__('编辑节点失败:')?>',
+        'addSubCategoryFailed': '<?=__('添加子分类失败:')?>',
+        'deleteNodeFailed': '<?=__('删除节点失败:')?>',
+        'cannotFindModalElement': '<?=__('无法找到对话框元素，请刷新页面重试')?>',
+        'cannotOpenAddModal': '<?=__('无法打开添加分类对话框，请刷新页面重试')?>',
+        'cannotOpenEditModal': '<?=__('无法打开编辑分类对话框，请刷新页面重试')?>',
+        'loadCatalogTreeFailed': '<?=__('加载分类树失败：')?>',
+        'cannotSetSelfAsParent': '<?=__('不能将自己作为父分类')?>',
+        'systemCategoryNotDraggable': '<?=__('系统分类不允许拖动排序')?>',
+        'duplicateCategoryName': '<?=__('目标位置已存在同名分类')?>',
+        'sortSaved': '<?=__('排序已保存')?>',
+        'saveSortFailed': '<?=__('保存排序失败，已恢复原位置')?>',
+        'confirmDelete': '<?=__('确定要删除该分类吗？此操作不可恢复！')?>',
+        'confirmDeleteCategory': '<?=__('确定要删除分类')?>',
+        'deleteWarning': '<?=__('⚠️ 警告：删除分类会同时删除其所有子分类！')?>',
+        'deleteWarning2': '<?=__('此操作不可恢复，请谨慎操作！')?>',
+        'unnamedCategory': '<?=__('未命名分类')?>',
+        'confirm': '<?=__('确认')?>',
+        'confirmDeleteQuestion': '<?=__('确认删除吗？')?>',
+        'deleteRequestFailed': '<?=__('删除请求失败')?>',
+        'categoryTree': '<?=__('分类树')?>',
+        'categoryInfo': '<?=__('分类信息')?>',
+        'pleaseSelectCategory': '<?=__('请从左侧选择一个分类进行编辑')?>',
+        'category': '<?=__('父分类')?>',
+        'topLevelCategory': '<?=__('顶级分类')?>',
+        'level': '<?=__('层级')?>',
+        'systemCategoryCannotEditName': '<?=__('系统分类不允许修改名称')?>',
+        'systemCategoryCannotEdit': '<?=__('这是系统分类，部分字段不允许修改')?>'
+    };
+})();
+</script>
 
-    <!-- ========== Left Sidebar Start ========== -->
-    <!--左侧菜单栏 开始-->
-    @template(Weline_Admin::common/left-sidebar.phtml)
-    <!--左侧菜单栏 结束-->
-
-
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content">
-        <div class="page-content" style="min-height: 800px">
-            <div class="container-fluid">
-                <div class='row'>
-                    <h4 class='card-title'>
-                        <lang>开发文档->目录分类管理</lang>
-                    </h4>
-                    <p class='card-title-desc'>
-                        <lang>开发文档目录分类管理</lang>
-                    </p>
-                    <div class="col-12">
-                        <div class='card'>
-                            <div class='card-body'>
-                                <div class="btn-group pull-right">
-                                    <a href="@admin-url('dev/tool/admin/document/catalog')"
-                                       class='btn btn-warning waves-effect waves-light'>
-                                        <lang>继续添加</lang>
-                                    </a>
-                                    <button type='button'
-                                            onclick='window.location.href="@admin-url(' dev
-                                    /tool/admin/document')"' class='btn btn-dark waves-effect waves-light '>
-                                    <lang>返回</lang>
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-6'>
-                        <!--消息-->
-                        <template>Weline_Component::message.phtml</template>
-                        <div class='card'>
-                            <div class='card-body'>
-                                <div class="panel">
-                                    <php>$catalog_id = $catalog->getId();</php>
-                                    <empty name="$catalog_id">
-                                        <h4 class="text-info">
-                                            <lang>新建分类</lang>
-                                        </h4>
-                                        <else/>
-                                        <h4 class="text-warning">
-                                            <lang>修改分类</lang>
-                                        </h4>
-                                    </empty>
-                                    <form class='needs-validation' method='post'
-                                          action="@admin-url('dev/tool/admin/document/catalog/post')" novalidate>
-                                        <div class='row col'>
-                                            <div class='col-6 pull-left'>
-
-                                            </div>
-                                            <div class='col-6 pull-right button-items'>
-                                                <button type='submit'
-                                                        class='btn btn-primary waves-effect waves-light pull-right'>
-                                                    <lang>保存</lang>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class='row'>
-                                            <div class='col-md-6'>
-                                                <input type='text' name='id' class='form-control sr-only'
-                                                       value="@var{$catalog->getId()}">
-                                                <div class='mb-3 position-relative'>
-                                                    <label class='form-label' for='name'>
-                                                        <lang>目录名</lang>
-                                                    </label>
-                                                    <input type='text' name='name' class='form-control' id='name'
-                                                           placeholder='@lang(目录名)' value="@var{$catalog->getName()}"
-                                                           required>
-                                                    <div class='valid-feedback'>
-                                                        <lang>请输入目录名</lang>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class='col-md-3'>
-                                                <div class='mb-3 position-relative'>
-                                                    <label class='form-label'
-                                                           for='pid'>
-                                                        <lang>父级分类</lang>
-                                                    </label>
-                                                    <div class='input-group'>
-                                                        <div class='input-group-prepend'>
-                                                        <span class='input-group-text'
-                                                              id='pid-prepend'>@</span>
-                                                        </div>
-                                                        <select name='pid' class='form-control'
-                                                                id='pid'
-                                                                aria-describedby='pid-prepend' required>
-                                                            <option value="0-0">
-                                                                <lang>顶级分类</lang>
-                                                            </option>
-                                                            <foreach name="catalogs" item="v">
-                                                                <if condition="$catalog.pid === $v.id">
-                                                                    <option value="@var{$v.id}-@var{$v.level}" selected>
-                                                                        <var>$v.name</var>
-                                                                    </option>
-                                                                    <else/>
-                                                                    <option value="@var{$v.id}-@var{$v.level}">
-                                                                        <var>$v.name</var>
-                                                                    </option>
-                                                                </if>
-                                                                <notempty name="$v.nodes">
-                                                                    <foreach name="$v.nodes" item="node">
-                                                                        <if condition="$catalog.id === $node.pid">
-                                                                            <option value="@var{$node.id}-@var{$node.level}"
-                                                                                    selected>
-                                                                                <php>echo str_pad('-',$node['level']);</php>
-                                                                                <var>$node.name</var>
-                                                                            </option>
-                                                                            <else/>
-                                                                            <option value="@var{$node.id}-@var{$node.level}">
-                                                                                <php>echo str_pad('-',$node['level']);</php>
-                                                                                <var>$node.name</var>
-                                                                            </option>
-                                                                        </if>
-                                                                    </foreach>
-                                                                </notempty>
-                                                            </foreach>
-                                                        </select>
-                                                        <div class='valid-feedback'>
-                                                            <lang>请选择父级分类</lang>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class='mb-3 position-relative'>
-                                                    <label class='form-label'
-                                                           for='isActive'>
-                                                        <lang>是否启用</lang>
-                                                    </label>
-                                                    <div class='input-group'>
-                                                        <php>
-                                                            if(empty($catalog)){
-                                                            $checked = '';
-                                                            }else{
-                                                            $checked = $catalog->isActive()?'checked':'';
-                                                            }
-                                                        </php>
-                                                        <input type='checkbox' name='is_active' id="isActive"
-                                                               class='form-control is-active' @var($checked)/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class='col-md-12'>
-                                                <div class='mb-3 position-relative'>
-                                                    <label class='form-label' for='description'>
-                                                        <lang>简介</lang>
-                                                    </label>
-                                                    <textarea rows="5" type='text' name='description'
-                                                              class='form-control' id='description'
-                                                              placeholder='@lang(分类简介)' required>@var{$catalog->getDescription()}</textarea>
-                                                    <div class='valid-feedback'>
-                                                        <lang>请输入分类简介</lang>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class='row col'>
-                                            <div class='col-6 pull-left'>
-
-                                            </div>
-                                            <div class='col-6 pull-right button-items'>
-                                                <button type='submit'
-                                                        class='btn btn-primary waves-effect waves-light pull-right'>
-                                                    <lang>保存</lang>
-                                                </button>
-                                                <button type='button'
-                                                        onclick='window.location.href="@admin-url(' dev
-                                                /tool/admin/document')"'
-                                                class='btn btn-default waves-effect waves-light pull-right '>
-                                                <lang>返回</lang>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end col -->
-                    <div class='col-6'>
-                        <div class='card'>
-                            <div class='card-body'>
-                                <div class="panel">
-                                    <h4>分类管理</h4>
-                                    <div id="catalog-tree">
-                                    </div>
-                                    <script>
-                                        function renderTree() {
-                                            $.get({
-                                                url: '@admin-url("dev/tool/admin/document/catalog/tree")',
-                                            }).done(res => {
-                                                console.log(res)
-                                                $('#catalog-tree').treeview({
-                                                    data: res,
-                                                    enableLinks: true,
-                                                    expandIcon: 'glyphicon glyphicon-plus'
-                                                });
-                                            })
-                                        }
-
-                                        renderTree();
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end col -->
-
-                </div> <!-- end row -->
+<!-- 页面标题 -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="mb-1"><?=__('开发文档分类管理')?></h4>
+                <p class="text-muted mb-0"><?=__('左侧点击分类可在右侧编辑，拖拽节点可调整分类顺序和层级，空白处按住鼠标可以左右拖动')?></p>
             </div>
-            <!-- container-fluid -->
+            <div>
+                <button type="button" class="btn btn-primary" id="btn-add-top-level">
+                    <i class="mdi mdi-plus"></i> <?=__('添加顶级分类')?>
+                </button>
+                <a href="@admin-url('dev/tool/admin/document')" class="btn btn-secondary">
+                    <i class="mdi mdi-arrow-left"></i> <?=__('返回')?>
+                </a>
+            </div>
         </div>
-        <!-- End Page-content -->
+    </div>
+</div>
 
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <script>document.write(new Date().getFullYear())</script>
-                        © Weline.
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end d-none d-sm-block">
-                            Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
-                                    href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
+<!-- 消息提示 -->
+<template>Weline_Component::message.phtml</template>
+
+<!-- AJAX消息提示容器 -->
+<div id="ajax-message-container" class="row mb-3" style="display: none;">
+    <div class="col-12"></div>
+</div>
+
+<!-- 左右分栏布局 -->
+<div class="row">
+    <!-- 左侧分类树 -->
+    <div class="col-md-5 col-lg-4 col-xl-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="mdi mdi-folder-tree me-2"></i>
+                    <?=__('分类树')?>
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div id="catalog-tree-container" style="min-height: 500px; overflow-x: auto; overflow-y: auto;">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden"><?=__('加载中...')?></span>
                         </div>
+                        <p class="mt-2 text-muted"><?=__('正在加载分类树...')?></p>
                     </div>
                 </div>
             </div>
-        </footer>
-
+        </div>
     </div>
-    <!-- end main content-->
 
+    <!-- 右侧编辑面板 -->
+    <div class="col-md-7 col-lg-8 col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0" id="catalog-edit-title">
+                    <i class="mdi mdi-folder-edit me-2"></i>
+                    <?=__('分类信息')?>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="catalog-edit-container">
+                    <div class="text-center py-5">
+                        <i class="mdi mdi-folder-outline" style="font-size: 4rem; color: var(--backend-color-text-secondary, #6c757d); opacity: 0.5;"></i>
+                        <p class="mt-3 text-muted"><?=__('请从左侧选择一个分类进行编辑')?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- END layout-wrapper -->
 
-<!--右边栏-->
-@template(Weline_Admin::common/right-sidebar.phtml)
-<!--tinymce js-->
-<script src='@static(Weline_Admin::assets/libs/tinymce/tinymce.min.js)'></script>
-
-<!-- init js -->
-<script src='@static(Weline_Admin::assets/js/pages/form-editor.init.js)'></script>
-
-<!--页脚-->
-@template(Weline_Admin::common/footer.phtml)
-
-<!-- jquery.vectormap map -->
-<script src="@static(Weline_Admin::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
-<script src="@static(Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
-<!--switch开关-->
-<js>Weline_Admin::/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js</js>
-<php>
-    if(empty($catalog->getId())){
-    $checked = 'false';
-    }else{
-    $checked = $catalog->isActive()?'true':'false';
-    }
-</php>
 <script>
-
-    $('#isActive').bootstrapSwitch({
-        state: @var{$checked},//开关状态
-        size: null,//尺寸 mini small large
-        animate: true,//开启动画效果
-        disabled: false,//禁用
-        readonly: false,
-        indeterminate: false,
-        inverse: false,//方向反转
-        radioAllOff: false,
-        onColor: 'primary',//开启颜色 primary、info，primary，warning，warning，default
-        offColor: 'warning',//关闭颜色 primary、info，primary，warning，warning，default
-        onText: '@lang(启用)',//开启时展示的文本
-        offText: '@lang(关闭)',//关闭时展示的文本
-        labelText: '&nbsp',//空白区域的文本
-        handleWidth: 'auto',
-        labelWidth: 'auto',
-        baseClass: 'bootstrap-switch',
-        wrapperClass: 'wrapper',
-        onInit: function onInit() {
-            let ele = $('#isActive')
-            if ('on' === ele.val()) {
-                ele.val(1)
-            } else {
-                ele.val(0)
-            }
-        },
-        onSwitchChange: function onSwitchChange(event, state) {
-            //切换时的回调 state
-            $('#isActive').val(state ? 1 : 0)
+(function() {
+    'use strict';
+    
+    var catalogTree = null;
+    var currentCatalogId = null;
+    var isSavingOrder = false;
+    var saveOrderTimer = null;
+    
+    $(document).ready(function() {
+        loadCatalogTree();
+        
+        $('#btn-add-top-level').on('click', function() {
+            showAddCatalogForm(0);
+        });
+        
+        $(document).on('submit', '#catalog-edit-form', function(e) {
+            e.preventDefault();
+            saveCatalog();
+        });
+    });
+    
+    function hasSystemChild(catalogId) {
+        if (!catalogTree || !catalogTree.jstree) {
+            return false;
         }
-    })
+        try {
+            var node = catalogTree.jstree('get_node', catalogId.toString());
+            if (!node) {
+                return false;
+            }
+            
+            var isSystem = false;
+            if (node.original) {
+                if (node.original.is_system !== undefined) {
+                    isSystem = node.original.is_system == 1;
+                } else if (node.original.data && node.original.data.is_system !== undefined) {
+                    isSystem = node.original.data.is_system == 1;
+                }
+            } else if (node.data && node.data.is_system !== undefined) {
+                isSystem = node.data.is_system == 1;
+            }
+            
+            if (isSystem) {
+                return true;
+            }
+            
+            if (node.children && node.children.length > 0) {
+                for (var i = 0; i < node.children.length; i++) {
+                    var childId = node.children[i];
+                    if (hasSystemChild(childId)) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        } catch(e) {
+            console.warn('检查系统子分类时出错:', e);
+            return false;
+        }
+    }
+    
+    function loadCatalogTree() {
+        $.get({
+            url: '@admin-url("dev/tool/admin/document/catalog/tree")',
+            dataType: 'json'
+        }).done(function(data) {
+            if (!data || data.length === 0) {
+                $('#catalog-tree-container').html('<div class="text-center py-5"><p class="text-muted">' + i18n.noCategories + '</p></div>');
+                return;
+            }
+            
+            var treeData = convertToJSTreeFormat(data);
+            
+            if (catalogTree && catalogTree.jstree) {
+                try {
+                    if (saveOrderTimer) {
+                        clearTimeout(saveOrderTimer);
+                        saveOrderTimer = null;
+                    }
+                    isSavingOrder = false;
+                    catalogTree.jstree('destroy');
+                } catch(e) {
+                    console.warn('[CatalogTree] 销毁旧实例时出错:', e);
+                }
+            }
+            
+            $('#catalog-tree-container').html('<div id="catalog-tree"></div>');
+            var $catalogTree = $('#catalog-tree');
+            catalogTree = $catalogTree.jstree({
+                'core': {
+                    'data': treeData,
+                    'check_callback': function(operation, node, node_parent, node_position, more) {
+                        if (operation === 'move_node') {
+                            var nodeData = node.original && node.original.data ? node.original.data : {};
+                            var isSystem = nodeData.is_system == 1 || node.original.is_system == 1;
+                            if (isSystem) {
+                                return false;
+                            }
+                            return true;
+                        }
+                        return true;
+                    },
+                    'themes': {
+                        'responsive': true,
+                        'variant': 'large',
+                        'stripes': false
+                    }
+                },
+                'plugins': ['dnd', 'contextmenu'],
+                'dnd': {
+                    'copy': false,
+                    'inside_pos': 'last'
+                },
+                'contextmenu': {
+                    'items': function(node) {
+                        var isSystem = false;
+                        var nodeData = null;
+                        
+                        if (node.original) {
+                            if (node.original.is_system !== undefined) {
+                                isSystem = node.original.is_system == 1;
+                            }
+                            if (node.original.data) {
+                                nodeData = node.original.data;
+                                if (node.original.is_system === undefined && nodeData.is_system !== undefined) {
+                                    isSystem = nodeData.is_system == 1;
+                                }
+                            }
+                        }
+                        
+                        if (!nodeData && node.data) {
+                            nodeData = node.data;
+                            if (isSystem === false && nodeData.is_system !== undefined) {
+                                isSystem = nodeData.is_system == 1;
+                            }
+                        }
+                        
+                        var items = {};
+                        
+                        var hasSystemChildren = nodeData && nodeData.id ? hasSystemChild(nodeData.id) : false;
+                        items['delete'] = {
+                            'label': '<i class="mdi mdi-delete"></i> ' + i18n.delete,
+                            'action': function(data) {
+                                if (isSystem || hasSystemChildren) {
+                                    return false;
+                                }
+                                handleDeleteNode(data.reference);
+                                return true;
+                            },
+                            '_disabled': isSystem || hasSystemChildren,
+                            'title': isSystem ? i18n.systemCategoryNotDeletable : (hasSystemChildren ? i18n.hasSystemChildNotDeletable : i18n.deleteCategoryMenu),
+                            'separator_after': true
+                        };
+                        
+                        items['add_child'] = {
+                            'label': '<i class="mdi mdi-plus"></i> ' + i18n.addSubCategoryMenu,
+                            'action': function(data) {
+                                handleAddChildNode(data.reference);
+                            },
+                            'title': i18n.addSubCategoryMenu
+                        };
+                        
+                        return items;
+                    }
+                }
+            }).on('ready.jstree', function() {
+                markSystemNodes();
+            }).on('select_node.jstree', function(e, data) {
+                var nodeId = data.node.id;
+                loadCatalogForEdit(nodeId);
+            }).on('model.jstree', function() {
+                setTimeout(markSystemNodes, 100);
+            }).on('move_node.jstree', function(e, data) {
+                if (isSavingOrder) {
+                    return;
+                }
+                
+                if (saveOrderTimer) {
+                    clearTimeout(saveOrderTimer);
+                    saveOrderTimer = null;
+                }
+                
+                saveOrderTimer = setTimeout(function() {
+                    saveOrderTimer = null;
+                    if (isSavingOrder) {
+                        return;
+                    }
+                    try {
+                        saveTreeOrder(data);
+                    } catch(error) {
+                        console.error('[CatalogTree] 保存排序时出错:', error);
+                        isSavingOrder = false;
+                    }
+                }, 500);
+            });
+        }).fail(function(xhr, status, error) {
+            $('#catalog-tree-container').html('<div class="alert alert-danger">' + i18n.loadCatalogTreeFailed + error + '</div>');
+        });
+    }
+    
+    function markSystemNodes() {
+        if (!catalogTree || !catalogTree.jstree) {
+            return;
+        }
+        try {
+            var allNodes = catalogTree.jstree('get_json', null, {flat: true});
+            allNodes.forEach(function(node) {
+                var nodeElement = catalogTree.jstree('get_node', node.id, true);
+                if (nodeElement && nodeElement.length) {
+                    var nodeData = null;
+                    if (node.original && node.original.data) {
+                        nodeData = node.original.data;
+                    } else if (node.data) {
+                        nodeData = node.data;
+                    }
+                    
+                    if (nodeData) {
+                        var isSystem = nodeData.is_system == 1;
+                        var nodeId = nodeData.id;
+                        
+                        var anchor = nodeElement.find('.jstree-anchor');
+                        if (anchor.length) {
+                            anchor.attr('data-is-system', isSystem ? '1' : '0');
+                            anchor.attr('data-node-id', nodeId || '');
+                        }
+                        
+                        var jstreeNode = nodeElement.closest('.jstree-node');
+                        if (jstreeNode.length) {
+                            jstreeNode.attr('data-is-system', isSystem ? '1' : '0');
+                            jstreeNode.attr('data-node-id', nodeId || '');
+                            if (isSystem) {
+                                jstreeNode.attr('data-system', 'true');
+                            } else {
+                                jstreeNode.removeAttr('data-system');
+                            }
+                        }
+                    }
+                }
+            });
+        } catch(e) {
+            console.warn('标记系统节点时出错:', e);
+        }
+    }
+    
+    function convertToJSTreeFormat(data, level) {
+        level = level || 1;
+        var result = [];
+        if (!data || !Array.isArray(data)) {
+            return result;
+        }
+        
+        data.forEach(function(item) {
+            if (!item || !item.id) {
+                return;
+            }
+            
+            var itemLevel = item.level || level;
+            var isSystem = item.is_system == 1;
+            var isActive = item.is_active == 1;
+            
+            var iconHtml = '';
+            if (!isActive) {
+                iconHtml = '<i class="mdi mdi-folder-off text-muted me-2"></i>';
+            } else if (isSystem) {
+                iconHtml = '<i class="mdi mdi-folder-cog text-primary me-2"></i>';
+            } else {
+                iconHtml = '<i class="mdi mdi-folder text-success me-2"></i>';
+            }
+            
+            var node = {
+                id: item.id.toString(),
+                text: iconHtml + item.name + (item.description ? ' <small class="text-muted ms-2">(' + (item.description.length > 30 ? item.description.substring(0, 30) + '...' : item.description) + ')</small>' : '') + 
+                      (isSystem ? ' <span class="badge bg-primary system-badge ms-2"><i class="mdi mdi-shield-check me-1"></i>' + i18n.systemCategory + '</span>' : ''),
+                data: {
+                    id: item.id,
+                    name: item.name || '',
+                    description: item.description || '',
+                    pid: item.pid || 0,
+                    level: itemLevel,
+                    is_active: item.is_active || 0,
+                    is_system: item.is_system || 0
+                },
+                is_system: item.is_system || 0,
+                is_active: item.is_active || 0,
+                node_id: item.id,
+                node_name: item.name || '',
+                state: {
+                    opened: itemLevel <= 2,
+                    disabled: !isActive
+                },
+                icon: false
+            };
+            
+            if (item.nodes && Array.isArray(item.nodes) && item.nodes.length > 0) {
+                node.children = convertToJSTreeFormat(item.nodes, itemLevel + 1);
+            }
+            
+            result.push(node);
+        });
+        return result;
+    }
+    
+    function loadCatalogForEdit(catalogId) {
+        currentCatalogId = catalogId;
+        
+        $('#catalog-edit-container').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">' + i18n.loading + '</span></div></div>');
+        
+        $.ajax({
+            url: '@admin-url("dev/tool/admin/document/catalog/view")',
+            method: 'GET',
+            data: { id: catalogId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.code === 200 && response.data) {
+                    renderCatalogEditForm(response.data);
+                } else {
+                    $('#catalog-edit-container').html('<div class="alert alert-danger"><i class="mdi mdi-alert-circle me-2"></i>' + (response.msg || i18n.loadDocumentFailed) + '</div>');
+                }
+            },
+            error: function() {
+                $('#catalog-edit-container').html('<div class="alert alert-danger"><i class="mdi mdi-alert-circle me-2"></i>' + i18n.loadDocumentFailedRefresh + '</div>');
+            }
+        });
+    }
+    
+    function renderCatalogEditForm(catalog) {
+        var isSystem = catalog.is_system == 1;
+        var isReadonly = isSystem;
+        
+        var html = '<form id="catalog-edit-form">' +
+            '<input type="hidden" name="id" id="catalog_id" value="' + (catalog.id ? String(catalog.id) : '') + '">' +
+            '<input type="hidden" name="pid" id="catalog_pid" value="' + (catalog.pid ? String(catalog.pid) : '0') + '">' +
+            '<div class="mb-3"><label for="catalog_name" class="form-label">' + i18n.categoryName + ' <span class="text-danger">*</span></label>' +
+            '<input type="text" class="form-control" id="catalog_name" name="name" value="' + (catalog.name || '').replace(/"/g, '&quot;') + '" required placeholder="' + i18n.pleaseEnterCategoryName + '"' + (isReadonly ? ' readonly' : '') + '>' +
+            (isReadonly ? '<small class="text-muted"><i class="mdi mdi-information-outline me-1"></i>' + i18n.systemCategoryCannotEditName + '</small>' : '') + '</div>' +
+            '<div class="mb-3"><label for="catalog_description" class="form-label">' + i18n.categoryDescription + '</label>' +
+            '<textarea class="form-control" id="catalog_description" name="description" rows="3" placeholder="' + i18n.pleaseEnterCategoryDescription + '"' + (isReadonly ? ' readonly' : '') + '>' + (catalog.description || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '</textarea></div>' +
+            '<div class="mb-3"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="catalog_is_active" name="is_active" value="1"' + (catalog.is_active == 1 ? ' checked' : '') + (isReadonly ? ' disabled' : '') + '><label class="form-check-label" for="catalog_is_active">' + i18n.enableCategory + '</label></div></div>' +
+            '<div class="mb-3"><label class="form-label">' + i18n.category + '</label><div class="form-control-plaintext"><span class="badge bg-info">' + (catalog.parent_name || i18n.topLevelCategory) + '</span></div></div>' +
+            '<div class="mb-3"><label class="form-label">' + i18n.level + '</label><div class="form-control-plaintext"><span class="badge bg-secondary">' + (catalog.level || 1) + '</span></div></div>' +
+            (isSystem ? '<div class="alert alert-info"><i class="mdi mdi-information-outline me-2"></i>' + i18n.systemCategoryCannotEdit + '</div>' : '') +
+            '<div class="d-flex justify-content-between align-items-center"><div>' +
+            (!isSystem && catalog.id ? '<button type="button" class="btn btn-danger btn-delete-catalog" onclick="handleDeleteCatalog(' + catalog.id + ', \'' + (catalog.name || '').replace(/'/g, "\\'") + '\')" data-catalog-id="' + catalog.id + '" data-catalog-name="' + (catalog.name || '').replace(/"/g, '&quot;') + '"><i class="mdi mdi-delete"></i> ' + i18n.delete + '</button>' : '') +
+            '</div><div class="d-flex gap-2"><button type="button" class="btn btn-secondary" onclick="clearCatalogEditForm()">' + i18n.cancel + '</button><button type="submit" class="btn btn-primary"' + (isReadonly ? ' disabled' : '') + '>' + i18n.save + '</button></div></div></form>';
+        
+        $('#catalog-edit-title').html('<i class="mdi mdi-folder-edit me-2"></i>' + i18n.editCategory + ': ' + (catalog.name || ''));
+        $('#catalog-edit-container').html(html);
+    }
+    
+    function showAddCatalogForm(parentId) {
+        currentCatalogId = null;
+        
+        var parentName = i18n.topLevelCategory;
+        if (parentId) {
+            var parentNode = catalogTree.jstree('get_node', parentId.toString());
+            if (parentNode) {
+                parentName = parentNode.text.replace(/<[^>]*>/g, '').trim();
+            }
+        }
+        
+        var html = '<form id="catalog-edit-form">' +
+            '<input type="hidden" name="id" id="catalog_id" value="">' +
+            '<input type="hidden" name="pid" id="catalog_pid" value="' + (parentId || '0') + '">' +
+            '<div class="mb-3"><label for="catalog_name" class="form-label">' + i18n.categoryName + ' <span class="text-danger">*</span></label>' +
+            '<input type="text" class="form-control" id="catalog_name" name="name" required placeholder="' + i18n.pleaseEnterCategoryName + '"></div>' +
+            '<div class="mb-3"><label for="catalog_description" class="form-label">' + i18n.categoryDescription + '</label>' +
+            '<textarea class="form-control" id="catalog_description" name="description" rows="3" placeholder="' + i18n.pleaseEnterCategoryDescription + '"></textarea></div>' +
+            '<div class="mb-3"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="catalog_is_active" name="is_active" value="1" checked><label class="form-check-label" for="catalog_is_active">' + i18n.enableCategory + '</label></div></div>' +
+            '<div class="mb-3"><label class="form-label">' + i18n.category + '</label><div class="form-control-plaintext"><span class="badge bg-info">' + parentName + '</span></div></div>' +
+            '<div class="d-flex justify-content-end gap-2"><button type="button" class="btn btn-secondary" onclick="clearCatalogEditForm()">' + i18n.cancel + '</button><button type="submit" class="btn btn-primary">' + i18n.save + '</button></div></form>';
+        
+        $('#catalog-edit-title').html('<i class="mdi mdi-folder-plus me-2"></i>' + (parentId ? i18n.addSubCategory : i18n.addTopLevelCategory));
+        $('#catalog-edit-container').html(html);
+    }
+    
+    function clearCatalogEditForm() {
+        $('#catalog-edit-container').html('<div class="text-center py-5"><i class="mdi mdi-folder-outline" style="font-size: 4rem; color: var(--backend-color-text-secondary, #6c757d); opacity: 0.5;"></i><p class="mt-3 text-muted">' + i18n.pleaseSelectCategory + '</p></div>');
+        $('#catalog-edit-title').html('<i class="mdi mdi-folder-edit me-2"></i>' + i18n.categoryInfo);
+        currentCatalogId = null;
+        if (catalogTree) {
+            catalogTree.jstree('deselect_all');
+        }
+    }
+    
+    window.clearCatalogEditForm = clearCatalogEditForm;
+    
+    function saveCatalog() {
+        var catalogId = $('#catalog_id').val();
+        var formData = {
+            pid: $('#catalog_pid').val() || '0',
+            name: $('#catalog_name').val().trim(),
+            description: $('#catalog_description').val().trim(),
+            is_active: $('#catalog_is_active').is(':checked') ? 1 : 0
+        };
+        
+        if (catalogId && catalogId !== '' && catalogId !== '0') {
+            formData.id = String(catalogId);
+        }
+        
+        if (!formData.name) {
+            showNotification(i18n.categoryNameRequired, 'error');
+            return;
+        }
+        
+        $.ajax({
+            url: '@admin-url("dev/tool/admin/document/catalog/post")',
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                if (response && response.success) {
+                    loadCatalogTree();
+                    
+                    if (formData.id) {
+                        setTimeout(function() {
+                            loadCatalogForEdit(formData.id);
+                            if (catalogTree) {
+                                catalogTree.jstree('select_node', formData.id.toString());
+                            }
+                        }, 500);
+                    } else {
+                        clearCatalogEditForm();
+                    }
+                    
+                    showPageMessage(response.msg || i18n.saveSuccess, 'success');
+                } else {
+                    showPageMessage(response.msg || response.message || i18n.saveFailed, 'error');
+                }
+            },
+            error: function(xhr) {
+                var errorMsg = i18n.saveFailed;
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    errorMsg = response.msg || response.message || errorMsg;
+                } catch(e) {
+                    if (xhr.responseText && xhr.responseText.length < 200) {
+                        errorMsg = xhr.responseText;
+                    }
+                }
+                showPageMessage(errorMsg, 'error');
+            }
+        });
+    }
+    
+    function handleDeleteNode(nodeId) {
+        try {
+            if (typeof catalogTree === 'undefined' || !catalogTree) {
+                showNotification(i18n.catalogTreeNotInitialized, 'error');
+                return;
+            }
+            
+            if (!catalogTree.jstree) {
+                showNotification(i18n.jstreeNotAvailable, 'error');
+                return;
+            }
+            
+            var node = catalogTree.jstree('get_node', nodeId);
+            
+            if (!node) {
+                showNotification(i18n.nodeNotExists + ' ' + nodeId, 'error');
+                return;
+            }
+            
+            var nodeData = null;
+            var isSystem = false;
+            
+            if (node.original) {
+                if (node.original.is_system !== undefined) {
+                    isSystem = node.original.is_system == 1;
+                }
+                if (node.original.data) {
+                    nodeData = node.original.data;
+                    if (node.original.is_system === undefined && nodeData.is_system !== undefined) {
+                        isSystem = nodeData.is_system == 1;
+                    }
+                }
+            }
+            
+            if (!nodeData && node.data) {
+                nodeData = node.data;
+                if (isSystem === false && nodeData.is_system !== undefined) {
+                    isSystem = nodeData.is_system == 1;
+                }
+            }
+            
+            if (!nodeData) {
+                console.error('节点数据结构异常:', node);
+                showNotification(i18n.nodeDataFormatErrorShort, 'error');
+                return;
+            }
+            
+            if (isSystem) {
+                showNotification(i18n.systemCategoryNotDeletable, 'warning');
+                return;
+            }
+            
+            if (hasSystemChild(nodeData.id)) {
+                showNotification(i18n.hasSystemChildNotDeletable, 'warning');
+                return;
+            }
+            
+            if (typeof AdminConfirm !== 'undefined') {
+                AdminConfirm.show(i18n.confirmDeleteCategory + '"' + (nodeData.name || i18n.unnamedCategory) + '"吗？\n\n' + i18n.deleteWarning + '\n' + i18n.deleteWarning2).then(function(confirmed) {
+                    if (confirmed) {
+                        performDelete(nodeData.id);
+                    }
+                });
+            } else {
+                if (confirm(i18n.confirmDeleteCategory + '"' + (nodeData.name || i18n.unnamedCategory) + '"吗？\n\n' + i18n.deleteWarning + '\n' + i18n.deleteWarning2)) {
+                    performDelete(nodeData.id);
+                }
+            }
+        } catch(e) {
+            console.error('删除节点失败:', e);
+            showNotification(i18n.deleteNodeFailed + ' ' + e.message, 'error');
+        }
+    }
+    
+    function handleAddChildNode(nodeId) {
+        showAddCatalogForm(nodeId);
+    }
+    
+    function handleDeleteCatalog(catalogId, catalogName) {
+        if (catalogTree && catalogTree.jstree) {
+            var node = catalogTree.jstree('get_node', catalogId.toString());
+            if (node) {
+                var isSystem = false;
+                if (node.original) {
+                    if (node.original.is_system !== undefined) {
+                        isSystem = node.original.is_system == 1;
+                    } else if (node.original.data && node.original.data.is_system !== undefined) {
+                        isSystem = node.original.data.is_system == 1;
+                    }
+                }
+                
+                if (isSystem) {
+                    showNotification(i18n.systemCategoryNotDeletable, 'warning');
+                    return;
+                }
+                
+                if (hasSystemChild(catalogId)) {
+                    showNotification(i18n.hasSystemChildNotDeletable, 'warning');
+                    return;
+                }
+            }
+        }
+        
+        if (typeof AdminConfirm !== 'undefined') {
+            AdminConfirm.show(i18n.confirmDeleteCategory + ' "' + (catalogName || i18n.unnamedCategory) + '"吗？\n\n' + i18n.deleteWarning + '\n' + i18n.deleteWarning2).then(function(confirmed) {
+                if (confirmed) {
+                    performDelete(catalogId);
+                }
+            });
+        } else {
+            if (confirm(i18n.confirmDeleteCategory + ' "' + (catalogName || i18n.unnamedCategory) + '"吗？\n\n' + i18n.deleteWarning + '\n' + i18n.deleteWarning2)) {
+                performDelete(catalogId);
+            }
+        }
+    }
+    
+    window.handleDeleteCatalog = handleDeleteCatalog;
+    
+    function performDelete(id) {
+        $.ajax({
+            url: '@admin-url("dev/tool/admin/document/catalog/delete")',
+            method: 'POST',
+            data: { id: id },
+            dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                if (response && response.success) {
+                    loadCatalogTree();
+                    clearCatalogEditForm();
+                    showNotification(response.msg || i18n.deleteSuccess, 'success');
+                } else {
+                    showNotification(response.msg || response.message || i18n.deleteFailed, 'error');
+                }
+            },
+            error: function(xhr) {
+                var errorMsg = i18n.deleteFailed;
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    errorMsg = response.msg || response.message || errorMsg;
+                } catch(e) {
+                    errorMsg = xhr.responseText || errorMsg;
+                }
+                showNotification(errorMsg, 'error');
+            }
+        });
+    }
+    
+    function saveTreeOrder(data) {
+        if (isSavingOrder) {
+            return;
+        }
+        
+        if (!data || !data.node) {
+            console.error('[CatalogTree] saveTreeOrder 失败：data或node无效', data);
+            return;
+        }
+        
+        isSavingOrder = true;
+        
+        var node = data.node;
+        var newParent = data.parent;
+        var newPosition = typeof data.position === 'number' ? data.position + 1 : 1;
+        var oldParent = data.old_parent;
+        var oldPosition = data.old_position;
+        
+        var nodeData = {};
+        
+        if (node.original && node.original.data) {
+            nodeData = node.original.data;
+        } else if (node.original) {
+            nodeData = node.original;
+        } else if (node.data) {
+            nodeData = node.data;
+        }
+        
+        if (!nodeData.id && node.id) {
+            var fullNode = catalogTree.jstree('get_node', node.id);
+            if (fullNode) {
+                if (fullNode.original && fullNode.original.data) {
+                    nodeData = fullNode.original.data;
+                } else if (fullNode.original) {
+                    nodeData = fullNode.original;
+                } else if (fullNode.data) {
+                    nodeData = fullNode.data;
+                } else {
+                    nodeData = {
+                        id: fullNode.node_id || fullNode.id || node.id,
+                        name: fullNode.node_name || fullNode.text || '',
+                        is_system: fullNode.is_system || 0,
+                        is_active: fullNode.is_active || 0
+                    };
+                }
+            } else {
+                nodeData = {
+                    id: node.node_id || node.id,
+                    name: node.node_name || node.text || '',
+                    is_system: node.is_system || 0,
+                    is_active: node.is_active || 0
+                };
+            }
+        }
+        
+        if (!nodeData.id) {
+            if (node.id) {
+                nodeData.id = node.id;
+            } else {
+                console.warn('[CatalogTree] saveTreeOrder 失败：无法获取节点ID');
+                isSavingOrder = false;
+                return;
+            }
+        }
+        
+        if (!nodeData.name && node.text) {
+            nodeData.name = node.text.replace(/<[^>]*>/g, '').trim();
+        }
+        if (nodeData.is_system === undefined) {
+            nodeData.is_system = node.is_system || 0;
+        }
+        
+        var newParentId = 0;
+        var newLevel = 1;
+        if (newParent !== '#') {
+            var parentNode = catalogTree.jstree('get_node', newParent);
+            if (parentNode) {
+                var parentData = null;
+                if (parentNode.original && parentNode.original.data) {
+                    parentData = parentNode.original.data;
+                } else if (parentNode.original) {
+                    parentData = parentNode.original;
+                } else if (parentNode.data) {
+                    parentData = parentNode.data;
+                }
+                
+                if (parentData && parentData.id) {
+                    newParentId = parseInt(parentData.id, 10) || 0;
+                    newLevel = (parseInt(parentData.level, 10) || 0) + 1;
+                }
+            }
+        }
+        
+        var currentNodeId = parseInt(nodeData.id, 10);
+        
+        if (newParentId > 0 && newParentId == currentNodeId) {
+            catalogTree.jstree('move_node', node, oldParent, oldPosition);
+            showNotification(i18n.cannotSetSelfAsParent, 'error');
+            isSavingOrder = false;
+            return;
+        }
+        
+        var isSystem = nodeData.is_system == 1;
+        if (isSystem) {
+            catalogTree.jstree('move_node', node, oldParent, oldPosition);
+            isSavingOrder = false;
+            return;
+        }
+        
+        if (isNaN(currentNodeId)) {
+            console.error('[CatalogTree] saveTreeOrder 失败：节点ID不是有效数字', nodeData.id);
+            isSavingOrder = false;
+            return;
+        }
+        
+        var saveData = {
+            id: currentNodeId,
+            pid: newParentId,
+            level: newLevel,
+            position: newPosition
+        };
+        
+        $.ajax({
+            url: '@admin-url("dev/tool/admin/document/catalog/update-order")',
+            method: 'POST',
+            data: saveData,
+            dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                isSavingOrder = false;
+                
+                if (response && response.success) {
+                    var selectedNodeId = currentCatalogId;
+                    loadCatalogTree();
+                    
+                    if (selectedNodeId) {
+                        setTimeout(function() {
+                            if (catalogTree) {
+                                catalogTree.jstree('select_node', selectedNodeId.toString());
+                                loadCatalogForEdit(selectedNodeId);
+                            }
+                        }, 500);
+                    }
+                    
+                    showPageMessage(response.msg || i18n.sortSaved, 'success');
+                } else {
+                    catalogTree.jstree('move_node', node, oldParent, oldPosition);
+                    showPageMessage(response.msg || i18n.saveSortFailed, 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                isSavingOrder = false;
+                catalogTree.jstree('move_node', node, oldParent, oldPosition);
+                var errorMsg = i18n.saveSortFailed;
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    errorMsg = response.msg || response.message || errorMsg;
+                } catch(e) {
+                    if (xhr.status === 404) {
+                        errorMsg = i18n.saveSortFailed + ' (接口不存在)';
+                    } else {
+                        errorMsg = xhr.responseText || errorMsg;
+                    }
+                }
+                showPageMessage(errorMsg, 'error');
+            }
+        });
+    }
+    
+    function showNotification(message, type) {
+        if (typeof BackendToast !== 'undefined') {
+            BackendToast[type] ? BackendToast[type](message) : BackendToast.info(message);
+        } else {
+            showPageMessage(message, type);
+        }
+    }
+    
+    function showPageMessage(message, type) {
+        type = type || 'success';
+        var container = $('#ajax-message-container .col-12');
+        var alertClass = type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info';
+        var iconClass = type === 'success' ? 'mdi-check-circle' : type === 'error' ? 'mdi-alert-circle' : type === 'warning' ? 'mdi-alert' : 'mdi-information';
+        
+        container.empty();
+        
+        var messageHtml = '<div class="alert alert-' + alertClass + ' alert-dismissible fade show" role="alert"><i class="mdi ' + iconClass + ' me-2"></i> ' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        
+        container.html(messageHtml);
+        $('#ajax-message-container').slideDown(300);
+        
+        setTimeout(function() {
+            $('#ajax-message-container').slideUp(300, function() {
+                container.empty();
+            });
+        }, 3000);
+    }
+    
+    function initDragScroll() {
+        var catalogTreeContainer = document.getElementById('catalog-tree-container');
+        if (!catalogTreeContainer) return;
+        
+        var isMouseDown = false;
+        var isDragging = false;
+        var startX = 0;
+        var startY = 0;
+        var scrollLeft = 0;
+        var scrollTop = 0;
+        var dragThreshold = 5;
+        
+        catalogTreeContainer.addEventListener('mousedown', function(e) {
+            if (e.button !== 0) return;
+            
+            if (e.target.tagName === 'A' || e.target.closest('a') || 
+                e.target.closest('.jstree-anchor') ||
+                e.target.closest('.jstree-node')) {
+                if (e.target.classList.contains('jstree-ocl') || 
+                    e.target.closest('.jstree-ocl')) {
+                    return;
+                }
+            }
+            
+            isMouseDown = true;
+            isDragging = false;
+            startX = e.pageX;
+            startY = e.pageY;
+            scrollLeft = catalogTreeContainer.scrollLeft;
+            scrollTop = catalogTreeContainer.scrollTop;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', function(e) {
+            if (!isMouseDown || !catalogTreeContainer) return;
+            
+            if (!isDragging) {
+                var deltaX = Math.abs(e.pageX - startX);
+                var deltaY = Math.abs(e.pageY - startY);
+                
+                if (deltaX > dragThreshold || deltaY > dragThreshold) {
+                    isDragging = true;
+                    catalogTreeContainer.classList.add('dragging');
+                    var rect = catalogTreeContainer.getBoundingClientRect();
+                    startX = e.pageX - rect.left;
+                    startY = e.pageY - rect.top;
+                    scrollLeft = catalogTreeContainer.scrollLeft;
+                    scrollTop = catalogTreeContainer.scrollTop;
+                } else {
+                    return;
+                }
+            }
+            
+            e.preventDefault();
+            var rect = catalogTreeContainer.getBoundingClientRect();
+            var x = e.pageX - rect.left;
+            var y = e.pageY - rect.top;
+            var walkX = (x - startX) * 2;
+            var walkY = (y - startY) * 2;
+            catalogTreeContainer.scrollLeft = scrollLeft - walkX;
+            catalogTreeContainer.scrollTop = scrollTop - walkY;
+        });
+        
+        document.addEventListener('mouseup', function() {
+            if (isMouseDown) {
+                isMouseDown = false;
+                if (isDragging) {
+                    isDragging = false;
+                    catalogTreeContainer.classList.remove('dragging');
+                }
+            }
+        });
+        
+        catalogTreeContainer.addEventListener('mouseleave', function() {
+            if (isMouseDown) {
+                isMouseDown = false;
+                if (isDragging) {
+                    isDragging = false;
+                    catalogTreeContainer.classList.remove('dragging');
+                }
+            }
+        });
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initDragScroll, 500);
+        });
+    } else {
+        setTimeout(initDragScroll, 500);
+    }
+})();
 </script>
-</body>
-</html>
-
