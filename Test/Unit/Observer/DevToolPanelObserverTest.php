@@ -52,11 +52,12 @@ final class DevToolPanelObserverTest extends TestCase
 
     public function testStoreTracePayloadDoesNotDependOnIsEnabledWhenSpansAlreadyExist(): void
     {
-        $property = new \ReflectionProperty(RequestLifecycleTrace::class, 'spans');
-        $property->setAccessible(true);
-        $property->setValue(null, [
+        $stateMethod = new ReflectionMethod(RequestLifecycleTrace::class, 'state');
+        $stateMethod->setAccessible(true);
+        $state = $stateMethod->invoke(null);
+        $state->spans = [
             ['name' => 'router_start', 'duration_ms' => 1.5, 'category' => 'framework'],
-        ]);
+        ];
 
         $store = $this->createMock(DevToolPayloadStore::class);
         $store->expects(self::once())
@@ -114,5 +115,21 @@ final class DevToolPanelObserverTest extends TestCase
             '<script>window.__WELINE_REQUEST_ID__="old-script-12345678";'
             . 'window.__WELINE_DEV_TOOL__={"requestId":"old-config-12345678"};</script>'
         ));
+    }
+
+    public function testPerformancePanelRejectsTimingFromAnotherDocument(): void
+    {
+        $template = file_get_contents(dirname(__DIR__, 3) . '/view/hooks/dev-tool-panel.phtml');
+
+        self::assertIsString($template);
+        self::assertStringContainsString("performance.getEntriesByType('navigation')[0]", $template);
+        self::assertStringContainsString('navigationUrl.href !== currentUrl.href', $template);
+        self::assertStringContainsString('staleNavigation: true', $template);
+        self::assertStringContainsString('浏览器 Navigation Timing 属于上一文档', $template);
+        self::assertStringContainsString(
+            "const resources = hasCurrentNavigationTiming ? performance.getEntriesByType('resource') : [];",
+            $template
+        );
+        self::assertStringNotContainsString('const timing = performance.timing;', $template);
     }
 }

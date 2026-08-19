@@ -6,6 +6,13 @@
  *
  * @var \Weline\Framework\View\Template $this
  */
+$jsonForScriptFlags = JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+    | JSON_INVALID_UTF8_SUBSTITUTE;
 ?>
 <style>
 .document-card {
@@ -552,6 +559,35 @@
 
 <!-- jstree js -->
 <link rel="stylesheet" href="@static(Weline_Acl::libs/vakata-jstree-3.3.14-0/dist/themes/default/style.min.css)" />
+
+<script>
+(function(g){
+  if(g.__bqAdmin_developer_workspace) return;
+  g.__bqAdmin_developer_workspace=true;
+  g.bqAdmin=g.bqAdmin||{};
+  g.bqAdmin['developer_workspace']=function(url, options){
+    options=options||{};
+    var body=options.body;
+    if(body && typeof FormData!=='undefined' && body instanceof FormData){
+      var p=new URLSearchParams(); body.forEach(function(v,k){ if(!(typeof File!=='undefined'&&v instanceof File)) p.append(k,String(v)); }); body=p.toString();
+    } else if(body && typeof body!=='string'){ try{ body=JSON.stringify(body); }catch(e){ body=''; } }
+    var run=function(api){ return api.resource('developer_workspace').adminRequest({url:url, method:options.method||'POST', headers:options.headers||{}, body:body||''}); };
+    var toResp=function(data){
+      var _biz=g.WelineApiBusiness||(g.Weline&&g.Weline.ApiBusiness);
+      if(_biz&&typeof _biz.wrapAdminBridgeResult==='function'){
+        return _biz.wrapAdminBridgeResult(data);
+      }
+      var body=(data&&typeof data==='object'&&!Array.isArray(data))?data:{success:true,data:data};
+      var ok=!(body&&body.success===false);
+      var resp={ok:ok,status:ok?200:400,json:function(){return Promise.resolve(body);},text:function(){return Promise.resolve(typeof body==='string'?body:JSON.stringify(body==null?{}:body));}};
+      Object.keys(body).forEach(function(k){ if(k==='ok'||k==='json'||k==='text'||k==='status') return; resp[k]=body[k]; });
+      return resp;
+    };
+    var p=(g.Weline&&g.Weline.load)?g.Weline.load('api').then(run):Promise.resolve(run(g.Weline.Api));
+    return p.then(toResp);
+  };
+})(window);
+</script>
 <script src="@static(Weline_Acl::libs/vakata-jstree-3.3.14-0/dist/jstree.min.js)"></script>
 <!--tinymce js-->
 <script src='@static(Weline_Admin::assets/libs/tinymce/tinymce.min.js)'></script>
@@ -590,13 +626,76 @@
     };
 
     var catalogTree = null;
-    var currentCategoryId = <?=json_encode($this->getData('selectedCategoryId') ?? '')?>;
+    var currentCategoryId = <?= json_encode($this->getData('selectedCategoryId') ?? '', $jsonForScriptFlags) ?>;
     var documentAdminUrls = {
         list: '<?= $this->getBackendUrl('dev/tool/admin/document/list') ?>',
         view: '<?= $this->getBackendUrl('dev/tool/admin/document/view') ?>',
         edit: '<?= $this->getBackendUrl('dev/tool/admin/document/edit') ?>',
         delete: '<?= $this->getBackendUrl('dev/tool/admin/document/delete') ?>'
     };
+
+    function centerElementInScrollContainer(container, element, behavior) {
+        if (!container || !element) {
+            return;
+        }
+
+        var target = element.querySelector('.jstree-anchor') || element;
+        var containerRect = container.getBoundingClientRect();
+        var targetRect = target.getBoundingClientRect();
+        if (!containerRect.height || !targetRect.height) {
+            return;
+        }
+
+        var offsetToCenter = (targetRect.top - containerRect.top)
+            - (containerRect.height / 2)
+            + (targetRect.height / 2);
+        var maxScrollTop = Math.max(0, container.scrollHeight - container.clientHeight);
+        var nextScrollTop = Math.max(0, Math.min(maxScrollTop, container.scrollTop + offsetToCenter));
+
+        container.scrollTo({
+            top: nextScrollTop,
+            behavior: behavior || 'smooth'
+        });
+    }
+
+    function openCatalogAncestors(categoryId) {
+        if (!categoryId || !catalogTree || !catalogTree.jstree) {
+            return;
+        }
+
+        var treeInstance = catalogTree.jstree(true);
+        var node = treeInstance.get_node(categoryId.toString());
+        if (!node) {
+            return;
+        }
+
+        (node.parents || [])
+            .filter(function(parentId) { return parentId && parentId !== '#'; })
+            .reverse()
+            .forEach(function(parentId) {
+                treeInstance.open_node(parentId);
+            });
+    }
+
+    function centerCatalogTreeNode(categoryId, behavior) {
+        if (!categoryId || !catalogTree || !catalogTree.jstree) {
+            return;
+        }
+
+        var run = function() {
+            var container = document.getElementById('catalog-tree-container');
+            var treeInstance = catalogTree.jstree(true);
+            var nodeElement = treeInstance.get_node(categoryId.toString(), true);
+            centerElementInScrollContainer(
+                container,
+                nodeElement && nodeElement.length ? nodeElement[0] : null,
+                behavior || 'smooth'
+            );
+        };
+
+        window.requestAnimationFrame(run);
+        window.setTimeout(run, 220);
+    }
     
     function initCatalogTree() {
         try {
@@ -605,7 +704,7 @@
                 return;
             }
             
-            var catalogs = <?=json_encode($this->getData('catalogs') ?? [])?>;
+            var catalogs = <?= json_encode($this->getData('catalogs') ?? [], $jsonForScriptFlags) ?>;
             var treeData = [];
             
             treeData.push({
@@ -636,12 +735,15 @@
                 'plugins': []
             }).on('ready.jstree', function() {
                 if (currentCategoryId) {
+                    openCatalogAncestors(currentCategoryId);
                     catalogTree.jstree('select_node', currentCategoryId.toString());
+                    centerCatalogTreeNode(currentCategoryId, 'auto');
                 } else {
                     catalogTree.jstree('select_node', '');
                 }
             }).on('select_node.jstree', function(e, data) {
                 var categoryId = data.node.id;
+                centerCatalogTreeNode(categoryId);
                 loadDocumentsByCategory(categoryId);
             });
         } catch (error) {
@@ -697,7 +799,7 @@
         
         $('#document-list-container').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">' + i18n.loading + '</span></div><p class="mt-2 text-muted">' + i18n.loadingDocument + '</p></div>');
         
-        $.ajax({
+        bqAdmin['developer_workspace']((function(cfg){return typeof cfg==='string'?cfg:(cfg&&cfg.url);})({
             url: documentAdminUrls.list,
             method: 'GET',
             data: { category_id: categoryId },
@@ -760,7 +862,7 @@
             Swal.fire(swalConfig).then(function (result) {
                 if (result.value) {
                     showLoading();
-                    $.post({
+                    bqAdmin['developer_workspace']((function(cfg){return typeof cfg==='string'?cfg:(cfg&&cfg.url);})({
                         url: target.attr('data-url')
                     }).done(function(res) {
                         hideLoading();
@@ -819,7 +921,7 @@
         
         offcanvas.show();
         
-        $.ajax({
+        bqAdmin['developer_workspace']((function(cfg){return typeof cfg==='string'?cfg:(cfg&&cfg.url);})({
             url: documentAdminUrls.view,
             method: 'GET',
             data: { id: docId },

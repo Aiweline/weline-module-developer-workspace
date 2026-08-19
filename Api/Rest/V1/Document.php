@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Weline\DeveloperWorkspace\Api\Rest\V1;
 
 use Weline\DeveloperWorkspace\Api\DevToolRestController;
-use Weline\CacheManager\Service\RuntimeCachePolicy;
+use Weline\Framework\Cache\RuntimeCachePolicy;
 use Weline\DeveloperWorkspace\Model\Document as DocumentModel;
 use Weline\DeveloperWorkspace\Model\Document\Catalog;
 use Weline\DeveloperWorkspace\Service\DevToolPayloadStore;
-use Weline\Framework\App\Env;
-use Weline\Framework\Http\Cookie;
+use Weline\DeveloperWorkspace\Service\PanelAccessService;
 use Weline\Framework\Manager\ObjectManager;
 
 class Document extends DevToolRestController
@@ -281,11 +280,6 @@ class Document extends DevToolRestController
 
     private function isAllowed(): bool
     {
-        if ((\defined('DEV') && DEV) || (\defined('DEBUG') && DEBUG)) {
-            return true;
-        }
-        $cookieName = (string)Env::get('dev_tool.cookie_name', 'w_dev_tool');
-
-        return Cookie::get($cookieName) === '1';
+        return (new PanelAccessService())->canAccessApi($this->request);
     }
 }

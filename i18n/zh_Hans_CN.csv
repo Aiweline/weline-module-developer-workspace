@@ -1,7 +1,84 @@
-﻿仅开发模式可用,仅开发模式可用
-"参数 sql 不能为空","参数 sql 不能为空"
-"仅支持对 SELECT 语句执行 EXPLAIN","仅支持对 SELECT 语句执行 EXPLAIN"
-开发文档,开发文档
+﻿"API 文档收集后","API 文档收集后"
+"DeveloperWorkspace 汇总 API 文档后触发，允许其他模块通过事件追加 SDK、协议或扩展 API 文档。","DeveloperWorkspace 汇总 API 文档后触发，允许其他模块通过事件追加 SDK、协议或扩展 API 文档。"
+异步事件验收台不支持操作：%{1},异步事件验收台不支持操作：%{1}
+"执行异步资源变更 WebUI 验收步骤","执行异步资源变更 WebUI 验收步骤"
+"异步资源变更 WebUI 验收台","异步资源变更 WebUI 验收台"
+"通过 w_changed() 实测 Outbox、Delivery、Queue 与异步 Observer。","通过 w_changed() 实测 Outbox、Delivery、Queue 与异步 Observer。"
+开发工具面板,开发工具面板
+在页面中显示开发工具面板，提供路由查看、API文档等功能。仅在开发模式下显示。,在页面中显示开发工具面板，提供路由查看、API文档等功能。仅在开发模式下显示。
+开发工具面板-扩展标签,开发工具面板-扩展标签
+"在开发工具面板标签栏「耗时统计」之后注入扩展标签按钮，由各模块自行实现（如 WLS 等）。","在开发工具面板标签栏「耗时统计」之后注入扩展标签按钮，由各模块自行实现（如 WLS 等）。"
+开发工具面板-扩展搜索区,开发工具面板-扩展搜索区
+"在开发工具面板搜索区域之后注入扩展标签对应的搜索区 HTML 与注册脚本。","在开发工具面板搜索区域之后注入扩展标签对应的搜索区 HTML 与注册脚本。"
+开发工具标题,开发工具标题
+在开发工具面板中显示标题内容。,在开发工具面板中显示标题内容。
+前言,前言
+说在前面,说在前面
+安装,安装
+安装文档,安装文档
+快速开始,快速开始
+框架模组,框架模组
+框架规范,框架规范
+框架类的规范,框架类的规范
+模型文档,模型文档
+使用控制器,使用控制器
+模组事件,模组事件
+WelineFramework插件功能,WelineFramework插件功能
+"Weline_DeveloperWorkspace Upgrade: idempotent DocumentUniqueKeyHealer","Weline_DeveloperWorkspace Upgrade: idempotent DocumentUniqueKeyHealer"
+开发助手,开发助手
+关闭沙盒环境,关闭沙盒环境
+沙盒启动Key,沙盒启动Key
+"异步验收探针只接受 ResourceChange v1","异步验收探针只接受 ResourceChange v1"
+异步验收探针标识不匹配,异步验收探针标识不匹配
+"Weline_DeveloperWorkspace: before_schema_diff_commit — DocumentUniqueKeyHealer","Weline_DeveloperWorkspace: before_schema_diff_commit — DocumentUniqueKeyHealer"
+文档ID不能为空,文档ID不能为空
+文档不存在,文档不存在
+文档路径信息不完整,文档路径信息不完整
+无法读取文档文件,无法读取文档文件
+文档管理配置,文档管理配置
+配置已保存,配置已保存
+扫描完成,扫描完成
+任务已执行,任务已执行
+失败任务已重置,失败任务已重置
+适配器测试完成,适配器测试完成
+添加,添加
+修改,修改
+文件上传失败！,文件上传失败！
+未知,未知
+获取成功,获取成功
+开发文档管理,开发文档管理
+"fa fa-list-alt","fa fa-list-alt"
+管理开发文档,管理开发文档
+文档列表,文档列表
+"mdi mdi-translate","mdi mdi-translate"
+保存文档管理配置,保存文档管理配置
+"mdi mdi-content-save","mdi mdi-content-save"
+扫描文档翻译适配器,扫描文档翻译适配器
+"mdi mdi-magnify-scan","mdi mdi-magnify-scan"
+执行文档翻译任务,执行文档翻译任务
+"mdi mdi-play","mdi mdi-play"
+重试失败文档翻译任务,重试失败文档翻译任务
+"mdi mdi-replay","mdi mdi-replay"
+测试文档翻译适配器,测试文档翻译适配器
+"mdi mdi-test-tube","mdi mdi-test-tube"
+文档删除,文档删除
+"fa fa-delete","fa fa-delete"
+文档编辑,文档编辑
+"fa fa-edit","fa fa-edit"
+文档添加,文档添加
+"fa fa-plus","fa fa-plus"
+文档保存,文档保存
+"fa fa-save","fa fa-save"
+id,id
+content,content
+文档成功！ID:,文档成功！ID:
+dev/tool/admin/document,dev/tool/admin/document
+文档上传,文档上传
+"fa fa-upload","fa fa-upload"
+文档查看,文档查看
+"fa fa-eye","fa fa-eye"
+文档列表API,文档列表API
+"fa fa-list","fa fa-list"
 分类ID不能为空,分类ID不能为空
 分类不存在,分类不存在
 系统分类不允许删除,系统分类不允许删除
@@ -18,113 +95,62 @@
 系统分类不允许拖动排序,系统分类不允许拖动排序
 排序已保存,排序已保存
 保存失败：,保存失败：
-获取成功,获取成功
-文档管理配置,文档管理配置
-配置已保存,配置已保存
-扫描完成,扫描完成
-任务已执行,任务已执行
-失败任务已重置,失败任务已重置
-适配器测试完成,适配器测试完成
-添加,添加
-修改,修改
-文件上传失败！,文件上传失败！
-文档ID不能为空,文档ID不能为空
-文档不存在,文档不存在
-未知,未知
+dev-document-catalog-manager,dev-document-catalog-manager
+"fa fa-book-o","fa fa-book-o"
+文档分类管理器,文档分类管理器
+dev-document-manager,dev-document-manager
+文档分类列表,文档分类列表
+文档分类树,文档分类树
+文档分类删除,文档分类删除
+文档分类保存,文档分类保存
+"fa fa-sort","fa fa-sort"
+文档分类排序,文档分类排序
+文档分类查看,文档分类查看
+无效的请求方法,无效的请求方法
 启动Key错误,启动Key错误
-"沙盒环境已关闭,接下来操作的数据将影响正式线上数据库！","沙盒环境已关闭,接下来操作的数据将影响正式线上数据库！"
-"沙盒环境已启动! 接下来操作的数据将写入沙盒数据库！","沙盒环境已启动! 接下来操作的数据将写入沙盒数据库！"
+沙盒环境已关闭！接下来操作的数据将影响正式线上数据库。,沙盒环境已关闭！接下来操作的数据将影响正式线上数据库。
+沙盒环境已启动！接下来操作的数据将写入沙盒数据库。,沙盒环境已启动！接下来操作的数据将写入沙盒数据库。
+沙盒启动Key不能为空,沙盒启动Key不能为空
 沙盒启动Key设置成功,沙盒启动Key设置成功
 沙盒环境已关闭,沙盒环境已关闭
+沙盒管理,沙盒管理
+"fa fa-database","fa fa-database"
 加载Debug配置失败：%{1},加载Debug配置失败：%{1}
-无效的请求方法,无效的请求方法
 保存成功,保存成功
 保存失败：%{1},保存失败：%{1}
-加载开发面板配置失败：%{1},加载开发面板配置失败：%{1}
+Debug配置,Debug配置
+查看Debug配置,查看Debug配置
+保存Debug配置,保存Debug配置
 加载沙盒配置失败：%{1},加载沙盒配置失败：%{1}
+沙盒配置,沙盒配置
+查看沙盒配置,查看沙盒配置
+保存沙盒配置,保存沙盒配置
+加载开发面板配置失败：%{1},加载开发面板配置失败：%{1}
+开发面板配置,开发面板配置
+查看开发面板配置,查看开发面板配置
+保存开发面板配置,保存开发面板配置
 WelineFramework开发文档,WelineFramework开发文档
-文档路径信息不完整,文档路径信息不完整
-无法读取文档文件,无法读取文档文件
 搜索关键词不能为空,搜索关键词不能为空
 API文档管理,API文档管理
-开发工具面板,开发工具面板
-在页面中显示开发工具面板，提供路由查看、API文档等功能。仅在开发模式下显示。,在页面中显示开发工具面板，提供路由查看、API文档等功能。仅在开发模式下显示。
-开发工具面板-扩展标签,开发工具面板-扩展标签
-"在开发工具面板标签栏「耗时统计」之后注入扩展标签按钮，由各模块自行实现（如 WLS 等）。","在开发工具面板标签栏「耗时统计」之后注入扩展标签按钮，由各模块自行实现（如 WLS 等）。"
-开发工具面板-扩展搜索区,开发工具面板-扩展搜索区
-"在开发工具面板搜索区域之后注入扩展标签对应的搜索区 HTML 与注册脚本。","在开发工具面板搜索区域之后注入扩展标签对应的搜索区 HTML 与注册脚本。"
-开发工具标题,开发工具标题
-在开发工具面板中显示标题内容。,在开发工具面板中显示标题内容。
-开发助手,开发助手
-关闭沙盒环境,关闭沙盒环境
-确定,确定
-正在清理旧的API文档...,正在清理旧的API文档...
-清理完成,清理完成
-正在生成API文档...,正在生成API文档...
-"更新API文档: %{method}","更新API文档: %{method}"
-"新增API文档: %{method}","新增API文档: %{method}"
-"处理模块分类: %{name}","处理模块分类: %{name}"
-"No AI translation locale is enabled.","No AI translation locale is enabled."
-"Document translation adapter is not registered.","Document translation adapter is not registered."
-"Selected model is not an active text-to-text model.","Selected model is not an active text-to-text model."
-"Document translation adapter is not available.","Document translation adapter is not available."
-"Document AI translation is disabled.","Document AI translation is disabled."
-"No target locale has AI translation enabled.","No target locale has AI translation enabled."
-"No document translation scope is enabled.","No document translation scope is enabled."
-"Daily document translation token limit has been reached.","Daily document translation token limit has been reached."
-"Monthly document translation token limit has been reached.","Monthly document translation token limit has been reached."
-"Document translation adapter is missing. Scan adapters first.","Document translation adapter is missing. Scan adapters first."
-"Document translation adapter is inactive.","Document translation adapter is inactive."
-"No text-to-text model is bound to the document translation adapter.","No text-to-text model is bound to the document translation adapter."
-"Bound model is not an active text-to-text model.","Bound model is not an active text-to-text model."
-"No available provider account for the bound model.","No available provider account for the bound model."
-Ready,Ready
-"Unknown document translation target type: %{1}","Unknown document translation target type: %{1}"
-"Source document no longer exists.","Source document no longer exists."
-"Source catalog no longer exists.","Source catalog no longer exists."
-"AI translation adapter missed one or more split segment parts: %{1}","AI translation adapter missed one or more split segment parts: %{1}"
-"AI translation adapter returned invalid JSON segments.","AI translation adapter returned invalid JSON segments."
-"AI translation adapter returned a segment without id or text.","AI translation adapter returned a segment without id or text."
-"AI translation adapter missed segment id: %{1}","AI translation adapter missed segment id: %{1}"
-正在清理旧的自动导入文档和分类...,正在清理旧的自动导入文档和分类...
-"找到 %{count} 个模块包含 doc 目录，开始扫描...","找到 %{count} 个模块包含 doc 目录，开始扫描..."
-"[%{current}/%{total}] 正在扫描模块: %{name}","[%{current}/%{total}] 正在扫描模块: %{name}"
-"路径: %{path}","路径: %{path}"
-"模块 %{name} 的开发文档","模块 %{name} 的开发文档"
-"扫描完成: 文档 %{scanned} 个, 新增 %{new} 个, 更新 %{updated} 个","扫描完成: 文档 %{scanned} 个, 新增 %{new} 个, 更新 %{updated} 个"
-正在清理不存在的文档和分类...,正在清理不存在的文档和分类...
-"跳过深层目录（超过6层）: %{path}","跳过深层目录（超过6层）: %{path}"
-"无法获取文件时间: %{path}","无法获取文件时间: %{path}"
-"无法读取文件: %{path}","无法读取文件: %{path}"
-"跳过重复内容: %{path}","跳过重复内容: %{path}"
-"分类变更: %{path}","分类变更: %{path}"
-"更新: %{path}","更新: %{path}"
-"新增: %{path}","新增: %{path}"
-"目录 %{name}","目录 %{name}"
-"已删除 %{count} 个不存在的文档","已删除 %{count} 个不存在的文档"
-无需删除文档,无需删除文档
-"已删除 %{count} 个不存在的分类","已删除 %{count} 个不存在的分类"
-无需删除分类,无需删除分类
-正在检查并清理重复文档...,正在检查并清理重复文档...
-没有发现需要清理的文档,没有发现需要清理的文档
-"共清理 %{count} 条重复文档","共清理 %{count} 条重复文档"
-"📡 开始导入API文档...","📡 开始导入API文档..."
-"API文档导入完成: 扫描 %{scanned}, 新增 %{new}, 更新 %{updated}","API文档导入完成: 扫描 %{scanned}, 新增 %{new}, 更新 %{updated}"
-"API文档导入失败: %{error}","API文档导入失败: %{error}"
-前言,前言
-说在前面,说在前面
-安装,安装
-安装文档,安装文档
-快速开始,快速开始
-框架模组,框架模组
-框架规范,框架规范
-框架类的规范,框架类的规范
-模型文档,模型文档
-使用控制器,使用控制器
-模组事件,模组事件
-WelineFramework插件功能,WelineFramework插件功能
 开发,开发
-管理开发文档,管理开发文档
+Prompt,Prompt
+Completion,Completion
+"总开关。关闭后不会自动入队或执行 AI 翻译，已存在译文仍可按读取逻辑展示。","总开关。关闭后不会自动入队或执行 AI 翻译，已存在译文仍可按读取逻辑展示。"
+"文档导入事实源固定为 zh_Hans_CN，不提供界面配置；翻译结果只写数据库，不回写模块 doc 文件。","文档导入事实源固定为 zh_Hans_CN，不提供界面配置；翻译结果只写数据库，不回写模块 doc 文件。"
+"支持语言决定前台/后台语言选择器可选项；AI 自动补齐决定该语言缺失或过期时是否进入异步翻译队列。","支持语言决定前台/后台语言选择器可选项；AI 自动补齐决定该语言缺失或过期时是否进入异步翻译队列。"
+开启后，缺失译文或源文档更新导致过期时会进入翻译队列；不会同步阻塞当前页面访问。,开启后，缺失译文或源文档更新导致过期时会进入翻译队列；不会同步阻塞当前页面访问。
+"控制哪些类型会被自动入队翻译。普通文档、API 文档、目录树互相独立；全不勾选时即使语言开启也不会产生翻译任务。","控制哪些类型会被自动入队翻译。普通文档、API 文档、目录树互相独立；全不勾选时即使语言开启也不会产生翻译任务。"
+开发文档列表和详情页中的普通模块文档。,开发文档列表和详情页中的普通模块文档。
+"API 文档页的接口标题、摘要、参数说明、响应说明等由导入器生成的文档内容。","API 文档页的接口标题、摘要、参数说明、响应说明等由导入器生成的文档内容。"
+左侧目录节点名称和描述。关闭后目录仍显示源语言或已有译文，不会自动补齐新译文。,左侧目录节点名称和描述。关闭后目录仍显示源语言或已有译文，不会自动补齐新译文。
+"文档翻译适配器使用的文本模型。模型上下文大小会影响单篇大文档如何自动拆分成多次 AI 请求。","文档翻译适配器使用的文本模型。模型上下文大小会影响单篇大文档如何自动拆分成多次 AI 请求。"
+"每次定时任务或手动执行最多处理的翻译任务数量。它不是文档总数，也不是单篇大文档的 AI 分段大小；大文档分段由适配器按模型上下文自动处理。","每次定时任务或手动执行最多处理的翻译任务数量。它不是文档总数，也不是单篇大文档的 AI 分段大小；大文档分段由适配器按模型上下文自动处理。"
+单个翻译任务遇到网络、限流等可重试错误时允许自动重试的最大次数。格式错误、配置缺失等不可重试错误不会无限重试。,单个翻译任务遇到网络、限流等可重试错误时允许自动重试的最大次数。格式错误、配置缺失等不可重试错误不会无限重试。
+"单篇源文档允许进入 AI 翻译链路的安全上限。超过模型单次上下文时会自动拆分请求；超过这里的业务上限才会被阻止。","单篇源文档允许进入 AI 翻译链路的安全上限。超过模型单次上下文时会自动拆分请求；超过这里的业务上限才会被阻止。"
+目标语言译文缺失、待翻译、失败或过期时的读取策略。回退源文档会显示中文源内容；空内容会让前台显示为空或由页面自行处理。,目标语言译文缺失、待翻译、失败或过期时的读取策略。回退源文档会显示中文源内容；空内容会让前台显示为空或由页面自行处理。
+"当天文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。","当天文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。"
+"当月文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。","当月文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。"
+"开启后，非源语言页面会显示 missing、pending、translated、stale、failed 等状态，方便调试；源语言页面不显示 translated 状态。","开启后，非源语言页面会显示 missing、pending、translated、stale、failed 等状态，方便调试；源语言页面不显示 translated 状态。"
 "开发文档编辑器 有新的开发文档时可以随时编辑","开发文档编辑器 有新的开发文档时可以随时编辑"
 保存,保存
 返回,返回
@@ -190,6 +216,7 @@ jstree实例不可用，请刷新页面重试,jstree实例不可用，请刷新�
 未命名分类,未命名分类
 确认,确认
 确认删除吗？,确认删除吗？
+确认组件不可用，删除操作已取消，请刷新页面重试,确认组件不可用，删除操作已取消，请刷新页面重试
 删除请求失败,删除请求失败
 分类树,分类树
 分类信息,分类信息
@@ -199,24 +226,7 @@ jstree实例不可用，请刷新页面重试,jstree实例不可用，请刷新�
 层级,层级
 系统分类不允许修改名称,系统分类不允许修改名称
 这是系统分类，部分字段不允许修改,这是系统分类，部分字段不允许修改
-Prompt,Prompt
-Completion,Completion
-"总开关。关闭后不会自动入队或执行 AI 翻译，已存在译文仍可按读取逻辑展示。","总开关。关闭后不会自动入队或执行 AI 翻译，已存在译文仍可按读取逻辑展示。"
-"文档导入事实源固定为 zh_Hans_CN，不提供界面配置；翻译结果只写数据库，不回写模块 doc 文件。","文档导入事实源固定为 zh_Hans_CN，不提供界面配置；翻译结果只写数据库，不回写模块 doc 文件。"
-"支持语言决定前台/后台语言选择器可选项；AI 自动补齐决定该语言缺失或过期时是否进入异步翻译队列。","支持语言决定前台/后台语言选择器可选项；AI 自动补齐决定该语言缺失或过期时是否进入异步翻译队列。"
-开启后，缺失译文或源文档更新导致过期时会进入翻译队列；不会同步阻塞当前页面访问。,开启后，缺失译文或源文档更新导致过期时会进入翻译队列；不会同步阻塞当前页面访问。
-"控制哪些类型会被自动入队翻译。普通文档、API 文档、目录树互相独立；全不勾选时即使语言开启也不会产生翻译任务。","控制哪些类型会被自动入队翻译。普通文档、API 文档、目录树互相独立；全不勾选时即使语言开启也不会产生翻译任务。"
-开发文档列表和详情页中的普通模块文档。,开发文档列表和详情页中的普通模块文档。
-"API 文档页的接口标题、摘要、参数说明、响应说明等由导入器生成的文档内容。","API 文档页的接口标题、摘要、参数说明、响应说明等由导入器生成的文档内容。"
-左侧目录节点名称和描述。关闭后目录仍显示源语言或已有译文，不会自动补齐新译文。,左侧目录节点名称和描述。关闭后目录仍显示源语言或已有译文，不会自动补齐新译文。
-"文档翻译适配器使用的文本模型。模型上下文大小会影响单篇大文档如何自动拆分成多次 AI 请求。","文档翻译适配器使用的文本模型。模型上下文大小会影响单篇大文档如何自动拆分成多次 AI 请求。"
-"每次定时任务或手动执行最多处理的翻译任务数量。它不是文档总数，也不是单篇大文档的 AI 分段大小；大文档分段由适配器按模型上下文自动处理。","每次定时任务或手动执行最多处理的翻译任务数量。它不是文档总数，也不是单篇大文档的 AI 分段大小；大文档分段由适配器按模型上下文自动处理。"
-单个翻译任务遇到网络、限流等可重试错误时允许自动重试的最大次数。格式错误、配置缺失等不可重试错误不会无限重试。,单个翻译任务遇到网络、限流等可重试错误时允许自动重试的最大次数。格式错误、配置缺失等不可重试错误不会无限重试。
-"单篇源文档允许进入 AI 翻译链路的安全上限。超过模型单次上下文时会自动拆分请求；超过这里的业务上限才会被阻止。","单篇源文档允许进入 AI 翻译链路的安全上限。超过模型单次上下文时会自动拆分请求；超过这里的业务上限才会被阻止。"
-目标语言译文缺失、待翻译、失败或过期时的读取策略。回退源文档会显示中文源内容；空内容会让前台显示为空或由页面自行处理。,目标语言译文缺失、待翻译、失败或过期时的读取策略。回退源文档会显示中文源内容；空内容会让前台显示为空或由页面自行处理。
-"当天文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。","当天文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。"
-"当月文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。","当月文档翻译任务累计 token 达到该值后停止继续执行。填 0 表示不限制。"
-"开启后，非源语言页面会显示 missing、pending、translated、stale、failed 等状态，方便调试；源语言页面不显示 translated 状态。","开启后，非源语言页面会显示 missing、pending、translated、stale、failed 等状态，方便调试；源语言页面不显示 translated 状态。"
+开发文档,开发文档
 编写和管理开发文档,编写和管理开发文档
 API文档,API文档
 目录管理,目录管理
@@ -251,31 +261,47 @@ jstree库未加载，请刷新页面重试,jstree库未加载，请刷新页面�
 好的,好的
 删除提示！,删除提示！
 文章删除失败，请重试！,文章删除失败，请重试！
+沙盒环境配置,沙盒环境配置
+沙盒环境是一套数据隔离的测试环境，测试时数据不会写入正式数据库，而是写入沙盒数据库。,沙盒环境是一套数据隔离的测试环境，测试时数据不会写入正式数据库，而是写入沙盒数据库。
+可配置参数：,可配置参数：
+控制沙盒环境参数来达到测试系统环境。,控制沙盒环境参数来达到测试系统环境。
+当前沙盒状态：,当前沙盒状态：
+开启,开启
+当前Key状态：,当前Key状态：
+已配置,已配置
+未配置,未配置
+新沙盒Key,新沙盒Key
+请输入新的沙盒Key,请输入新的沙盒Key
+沙盒请求请优先通过已授权表单开关；不要把启动Key放进可点击GET链接。,沙盒请求请优先通过已授权表单开关；不要把启动Key放进可点击GET链接。
+开启沙盒,开启沙盒
+关闭沙盒,关闭沙盒
 开发文档管理器,开发文档管理器
 系统,系统
 新建文档,新建文档
 新建一篇开发文档,新建一篇开发文档
-沙盒环境配置,沙盒环境配置
-沙盒环境是一套数据隔离的可提供给测试人员对代码进行测试的环境，测试时数据不会写入正式数据库，而是写入沙盒数据库。,沙盒环境是一套数据隔离的可提供给测试人员对代码进行测试的环境，测试时数据不会写入正式数据库，而是写入沙盒数据库。
-可配置参数：,可配置参数：
-控制沙盒环境参数来达到测试系统环境。,控制沙盒环境参数来达到测试系统环境。
-沙盒启动Key,沙盒启动Key
-当前沙盒状态：,当前沙盒状态：
-@if{enabled=>'开启'|'关闭'},@if{enabled=>'开启'|'关闭'}
-当前Key：,当前Key：
-沙盒Key,沙盒Key
-沙盒启动Key配置。使用时在请求后面加上sandbox参数。示例：,沙盒启动Key配置。使用时在请求后面加上sandbox参数。示例：
-开启沙盒,开启沙盒
-关闭沙盒请在Cookie中删除或者设置：w_sandbox值。示例：,关闭沙盒请在Cookie中删除或者设置：w_sandbox值。示例：
-关闭沙盒,关闭沙盒
-请输入沙盒Key,请输入沙盒Key
-Debug配置,Debug配置
 提示,提示
-Debug配置功能正在开发中，敬请期待。,Debug配置功能正在开发中，敬请期待。
-开发面板配置,开发面板配置
 开发面板配置功能正在开发中，敬请期待。,开发面板配置功能正在开发中，敬请期待。
-沙盒配置,沙盒配置
 沙盒配置功能正在开发中，敬请期待。,沙盒配置功能正在开发中，敬请期待。
+异步资源变更验收台,异步资源变更验收台
+"真实调用 w_changed()，展示 Outbox → Delivery → Queue → Observer 完整证据。","真实调用 w_changed()，展示 Outbox → Delivery → Queue → Observer 完整证据。"
+"1. 发起资源变更","1. 发起资源变更"
+"2. 推进异步链路","2. 推进异步链路"
+刷新状态,刷新状态
+"点击“发起资源变更”创建一个仅用于验收的 async_probe 资源。","点击“发起资源变更”创建一个仅用于验收的 async_probe 资源。"
+"HTTP / w_changed","HTTP / w_changed"
+"请求内构造 ResourceChange v1","请求内构造 ResourceChange v1"
+Outbox,Outbox
+与事务一起提交,与事务一起提交
+"Delivery / Queue","Delivery / Queue"
+"Relay 展开并建立队列尝试","Relay 展开并建立队列尝试"
+"Async Observer","Async Observer"
+"Worker 执行探针并进入 succeeded","Worker 执行探针并进入 succeeded"
+"Event ID","Event ID"
+"Probe ID","Probe ID"
+"探针 Delivery","探针 Delivery"
+异步性证明,异步性证明
+"原始证据 JSON","原始证据 JSON"
+Debug配置功能正在开发中，敬请期待。,Debug配置功能正在开发中，敬请期待。
 返回欢迎页,返回欢迎页
 返回上一页,返回上一页
 "搜索 ...","搜索 ..."
@@ -299,3 +325,73 @@ Debug配置功能正在开发中，敬请期待。,Debug配置功能正在开发
 明亮模式,明亮模式
 暗黑模式,暗黑模式
 RTL模式,RTL模式
+仅开发模式可用,仅开发模式可用
+"参数 sql 不能为空","参数 sql 不能为空"
+"仅支持对 SELECT 语句执行 EXPLAIN","仅支持对 SELECT 语句执行 EXPLAIN"
+"Weline 面板 token 无效。","Weline 面板 token 无效。"
+"Weline 面板已授权。","Weline 面板已授权。"
+正在清理旧的API文档...,正在清理旧的API文档...
+清理完成,清理完成
+正在生成API文档...,正在生成API文档...
+"更新API文档: %{method}","更新API文档: %{method}"
+"新增API文档: %{method}","新增API文档: %{method}"
+"处理模块分类: %{name}","处理模块分类: %{name}"
+"No AI translation locale is enabled.","No AI translation locale is enabled."
+"Document translation adapter is not registered.","Document translation adapter is not registered."
+"Selected model is not an active text-to-text model.","Selected model is not an active text-to-text model."
+"Document translation adapter is not available.","Document translation adapter is not available."
+"Document AI translation is disabled.","Document AI translation is disabled."
+"No target locale has AI translation enabled.","No target locale has AI translation enabled."
+"No document translation scope is enabled.","No document translation scope is enabled."
+"Daily document translation token limit has been reached.","Daily document translation token limit has been reached."
+"Monthly document translation token limit has been reached.","Monthly document translation token limit has been reached."
+"Document translation adapter is missing. Scan adapters first.","Document translation adapter is missing. Scan adapters first."
+"Document translation adapter is inactive.","Document translation adapter is inactive."
+"No text-to-text model is bound to the document translation adapter.","No text-to-text model is bound to the document translation adapter."
+"Bound model is not an active text-to-text model.","Bound model is not an active text-to-text model."
+"No available provider account for the bound model.","No available provider account for the bound model."
+Ready,Ready
+"Unknown document translation target type: %{1}","Unknown document translation target type: %{1}"
+"Source document no longer exists.","Source document no longer exists."
+"Source catalog no longer exists.","Source catalog no longer exists."
+"AI translation adapter missed one or more split segment parts: %{1}","AI translation adapter missed one or more split segment parts: %{1}"
+AI运行时提供器不可用。,AI运行时提供器不可用。
+"AI translation adapter returned invalid JSON segments.","AI translation adapter returned invalid JSON segments."
+"AI translation adapter returned a segment without id or text.","AI translation adapter returned a segment without id or text."
+"AI translation adapter missed segment id: %{1}","AI translation adapter missed segment id: %{1}"
+"DocumentUniqueKeyHealer: remapped document.category_id for %{1} catalog loser(s)","DocumentUniqueKeyHealer: remapped document.category_id for %{1} catalog loser(s)"
+"DocumentUniqueKeyHealer: remapped translation/job refs for %{1} document loser(s)","DocumentUniqueKeyHealer: remapped translation/job refs for %{1} document loser(s)"
+"DocumentUniqueKeyHealer: skip %{1} (table missing)","DocumentUniqueKeyHealer: skip %{1} (table missing)"
+"DocumentUniqueKeyHealer: %{1} groups=%{2} deleted=%{3}","DocumentUniqueKeyHealer: %{1} groups=%{2} deleted=%{3}"
+"DocumentUniqueKeyHealer: %{1} groups=%{2} deleted=%{3} backup=%{4}","DocumentUniqueKeyHealer: %{1} groups=%{2} deleted=%{3} backup=%{4}"
+"DocumentUniqueKeyHealer: backup failed for %{1}: %{2}","DocumentUniqueKeyHealer: backup failed for %{1}: %{2}"
+"DocumentUniqueKeyHealer: backup table %{1} was not created","DocumentUniqueKeyHealer: backup table %{1} was not created"
+"异步事件 producer 未开启：event.async.producer_enabled=false","异步事件 producer 未开启：event.async.producer_enabled=false"
+"HTTP 请求返回时探针 Observer 尚未成功；Relay 可能已经并发创建 pending Delivery。","HTTP 请求返回时探针 Observer 尚未成功；Relay 可能已经并发创建 pending Delivery。"
+"event_id 格式无效","event_id 格式无效"
+正在清理旧的自动导入文档和分类...,正在清理旧的自动导入文档和分类...
+"找到 %{count} 个模块包含 doc 目录，开始扫描...","找到 %{count} 个模块包含 doc 目录，开始扫描..."
+"[%{current}/%{total}] 正在扫描模块: %{name}","[%{current}/%{total}] 正在扫描模块: %{name}"
+"路径: %{path}","路径: %{path}"
+"模块 %{name} 的开发文档","模块 %{name} 的开发文档"
+"扫描完成: 文档 %{scanned} 个, 新增 %{new} 个, 更新 %{updated} 个","扫描完成: 文档 %{scanned} 个, 新增 %{new} 个, 更新 %{updated} 个"
+正在清理不存在的文档和分类...,正在清理不存在的文档和分类...
+"跳过深层目录（超过6层）: %{path}","跳过深层目录（超过6层）: %{path}"
+"无法获取文件时间: %{path}","无法获取文件时间: %{path}"
+"无法读取文件: %{path}","无法读取文件: %{path}"
+"跳过重复内容: %{path}","跳过重复内容: %{path}"
+"分类变更: %{path}","分类变更: %{path}"
+"更新: %{path}","更新: %{path}"
+"新增: %{path}","新增: %{path}"
+"目录 %{name}","目录 %{name}"
+"已删除 %{count} 个不存在的文档","已删除 %{count} 个不存在的文档"
+无需删除文档,无需删除文档
+"已删除 %{count} 个不存在的分类","已删除 %{count} 个不存在的分类"
+无需删除分类,无需删除分类
+正在检查并清理重复文档...,正在检查并清理重复文档...
+没有发现需要清理的文档,没有发现需要清理的文档
+"共清理 %{count} 条重复文档","共清理 %{count} 条重复文档"
+"📡 开始导入API文档...","📡 开始导入API文档..."
+"API文档导入完成: 扫描 %{scanned}, 新增 %{new}, 更新 %{updated}","API文档导入完成: 扫描 %{scanned}, 新增 %{new}, 更新 %{updated}"
+"API文档导入失败: %{error}","API文档导入失败: %{error}"
+"""API 文档收集后""","API 文档收集后"
